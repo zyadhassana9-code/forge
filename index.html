@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE — Strength Club, Cairo</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root { --bg:#0e0e0e; --ink:#f5f2ec; --dim:#8f8a80; --red:#e8332a; }
+  body { background:var(--bg); color:var(--ink); font-family:'Segoe UI', system-ui, sans-serif; }
+  nav { display:flex; justify-content:space-between; align-items:center; padding:24px 6vw; position:absolute; width:100%; z-index:10; }
+  .logo { font-size:24px; font-weight:900; letter-spacing:3px; }
+  .logo span { color:var(--red); }
+  nav ul { display:flex; gap:30px; list-style:none; }
+  nav a { color:rgba(245,242,236,.85); text-decoration:none; font-size:13px; letter-spacing:2px; text-transform:uppercase; font-weight:600; }
+  nav a:hover { color:var(--red); }
+  header { min-height:100vh; display:flex; align-items:center; padding:0 6vw; position:relative; overflow:hidden;
+    background:linear-gradient(100deg, rgba(14,14,14,.92) 35%, rgba(14,14,14,.5)), radial-gradient(800px 600px at 80% 40%, #5c1512, #1a0908 70%); }
+  header::after { content:'FORGE'; position:absolute; right:-2vw; bottom:-6vw; font-size:26vw; font-weight:900; color:rgba(232,51,42,.07); letter-spacing:-1vw; pointer-events:none; }
+  .hero { max-width:620px; position:relative; z-index:2; }
+  .hero .k { color:var(--red); letter-spacing:5px; font-size:13px; text-transform:uppercase; font-weight:700; }
+  .hero h1 { font-size:clamp(48px,7.5vw,104px); font-weight:900; letter-spacing:-3px; line-height:.96; margin:16px 0 22px; text-transform:uppercase; }
+  .hero p { color:var(--dim); font-size:17px; line-height:1.7; max-width:460px; }
+  .btn { display:inline-block; margin-top:38px; background:var(--red); color:#fff; padding:17px 44px; font-weight:800; font-size:14px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; transition:.25s; clip-path:polygon(8% 0, 100% 0, 92% 100%, 0 100%); }
+  .btn:hover { background:#c4261e; transform:translateY(-3px); }
+  section { padding:100px 6vw; max-width:1240px; margin:0 auto; }
+  .sec-tag { color:var(--red); font-weight:800; letter-spacing:3px; font-size:12px; text-transform:uppercase; }
+  h2 { font-size:clamp(30px,4.5vw,56px); font-weight:900; letter-spacing:-1.5px; text-transform:uppercase; margin:10px 0 50px; }
+  .classes { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; }
+  .cls { border:1px solid #26221f; padding:38px 30px; position:relative; overflow:hidden; transition:.3s; background:#131110; }
+  .cls::before { content:''; position:absolute; top:0; left:0; width:4px; height:0; background:var(--red); transition:.3s; }
+  .cls:hover::before { height:100%; }
+  .cls:hover { transform:translateX(6px); }
+  .cls .time { color:var(--red); font-size:12px; letter-spacing:2px; font-weight:700; }
+  .cls h3 { font-size:24px; margin:10px 0 8px; text-transform:uppercase; }
+  .cls p { color:var(--dim); font-size:14px; line-height:1.7; }
+  .calc { display:grid; grid-template-columns:1fr 1fr; gap:60px; background:#131110; border:1px solid #26221f; padding:60px; align-items:center; }
+  .calc label { display:block; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--dim); margin:22px 0 10px; }
+  .calc input[type=range] { width:100%; accent-color:var(--red); }
+  .calc .val { font-weight:800; font-size:18px; margin-left:10px; }
+  .result { text-align:center; }
+  .result .bmi { font-size:84px; font-weight:900; color:var(--red); line-height:1; font-variant-numeric:tabular-nums; }
+  .result .cat { font-size:15px; letter-spacing:2px; text-transform:uppercase; color:var(--dim); margin-top:10px; }
+  .result .tip { margin-top:22px; color:#c9c4ba; font-size:14.5px; line-height:1.7; }
+  .plans { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+  .plan { border:1px solid #26221f; padding:40px 30px; background:#131110; transition:.3s; }
+  .plan.hot { background:var(--red); border-color:var(--red); }
+  .plan:hover { transform:translateY(-6px); }
+  .plan h3 { text-transform:uppercase; font-size:17px; letter-spacing:2px; }
+  .plan .price { font-size:44px; font-weight:900; margin:16px 0 4px; }
+  .plan .per { color:var(--dim); font-size:13px; margin-bottom:24px; }
+  .plan.hot .per { color:rgba(255,255,255,.8); }
+  .plan ul { list-style:none; }
+  .plan li { padding:8px 0; font-size:14px; color:#c9c4ba; }
+  .plan.hot li { color:#fff; }
+  .plan li::before { content:'—'; color:var(--red); margin-right:10px; }
+  .plan.hot li::before { color:#fff; }
+  footer { padding:60px 6vw 40px; border-top:1px solid #26221f; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; color:var(--dim); font-size:13px; }
+  @media (max-width:800px){ .calc{grid-template-columns:1fr; padding:36px;} nav ul{display:none;} }
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">FORGE<span>.</span></div>
+  <ul><li><a href="#classes">Classes</a></li><li><a href="#bmi">BMI Check</a></li><li><a href="#plans">Membership</a></li></ul>
+</nav>
+<header>
+  <div class="hero">
+    <div class="k">Strength club · New Cairo</div>
+    <h1>Built,<br>not born.</h1>
+    <p>Barbells, sleds, sweat and a coach who knows your name. FORGE is Cairo's no-mirrors-no-ego strength club. First week is on us.</p>
+    <a href="#plans" class="btn">Start free week</a>
+  </div>
+</header>
+<section id="classes">
+  <div class="sec-tag">Weekly schedule</div>
+  <h2>Classes</h2>
+  <div class="classes">
+    <div class="cls"><div class="time">SUN / TUE / THU · 7AM</div><h3>Iron 101</h3><p>Squat, press, deadlift. Technique-first strength for beginners and returning lifters.</p></div>
+    <div class="cls"><div class="time">MON / WED · 6PM</div><h3>Engine Room</h3><p>45 minutes of sleds, ropes and assault bikes. Conditioning that respects your joints.</p></div>
+    <div class="cls"><div class="time">DAILY · 8PM</div><h3>Open Forge</h3><p>The floor is yours. Coaches roam, programs on the board, chalk provided.</p></div>
+    <div class="cls"><div class="time">SAT · 10AM</div><h3>Mobility Lab</h3><p>Hips, shoulders, spine. The hour that keeps the other hours possible.</p></div>
+  </div>
+</section>
+<section id="bmi">
+  <div class="sec-tag">Know your start line</div>
+  <h2>BMI check</h2>
+  <div class="calc">
+    <div>
+      <label>Height — <span class="val" id="h-val">175 cm</span></label>
+      <input type="range" id="h" min="140" max="210" value="175">
+      <label>Weight — <span class="val" id="w-val">80 kg</span></label>
+      <input type="range" id="w" min="40" max="160" value="80">
+      <label>Age — <span class="val" id="a-val">30</span></label>
+      <input type="range" id="a" min="16" max="80" value="30">
+    </div>
+    <div class="result">
+      <div class="bmi" id="bmi-val">26.1</div>
+      <div class="cat" id="bmi-cat">Overweight</div>
+      <p class="tip" id="bmi-tip">A great start line. Iron 101 plus two Engine Rooms a week would move this fast.</p>
+    </div>
+  </div>
+</section>
+<section id="plans">
+  <div class="sec-tag">Membership</div>
+  <h2>Pick your grind</h2>
+  <div class="plans">
+    <div class="plan"><h3>Off-peak</h3><div class="price">900</div><div class="per">EGP / month · 9am–4pm</div>
+      <ul><li>Open floor access</li><li>1 class / week</li><li>Locker room</li></ul></div>
+    <div class="plan hot"><h3>All access</h3><div class="price">1,400</div><div class="per">EGP / month · anytime</div>
+      <ul><li>Unlimited classes</li><li>Quarterly program review</li><li>Guest pass monthly</li><li>Recovery corner</li></ul></div>
+    <div class="plan"><h3>Coached</h3><div class="price">3,200</div><div class="per">EGP / month · anytime</div>
+      <ul><li>Everything in All Access</li><li>2 personal sessions / week</li><li>Nutrition check-ins</li></ul></div>
+  </div>
+</section>
+<footer>
+  <div>© 2026 FORGE Strength Club — District 5, New Cairo</div>
+  <div>@forge.cairo · +20 100 000 0000</div>
+</footer>
+<script>
+  const h = document.getElementById('h'), w = document.getElementById('w'), a = document.getElementById('a');
+  function update(){
+    document.getElementById('h-val').textContent = h.value + ' cm';
+    document.getElementById('w-val').textContent = w.value + ' kg';
+    document.getElementById('a-val').textContent = a.value;
+    const bmi = w.value / Math.pow(h.value/100, 2);
+    document.getElementById('bmi-val').textContent = bmi.toFixed(1);
+    const cat = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Healthy range' : bmi < 30 ? 'Overweight' : 'High';
+    document.getElementById('bmi-cat').textContent = cat;
+    const tips = {
+      'Underweight':'Time to eat and lift. Coached membership plus a surplus will build you up safely.',
+      'Healthy range':'Strong base. Now let\'s build on it — Iron 101 will put real numbers on your lifts.',
+      'Overweight':'A great start line. Iron 101 plus two Engine Rooms a week would move this fast.',
+      'High':'You belong here as much as anyone. Start with Mobility Lab and walking volume — we\'ll program the rest.'
+    };
+    document.getElementById('bmi-tip').textContent = tips[cat];
+  }
+  [h,w,a].forEach(el => el.addEventListener('input', update));
+  update();
+</script>
+</body>
+</html>
